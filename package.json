@@ -1,7 +1,8 @@
 {
   "name": "takeout",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "description": "学习谷粒外卖开发一个外卖APP",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
