@@ -1,5 +1,21 @@
 # takeout
 
+# 介绍
+
+# 内容
+
+package.json配置eslint继承规则文本:
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended",
+      "plugin:prettier/recommended"
+    ],
+
+
+
+
+# 安装启动
+
 ## Project setup
 ```
 npm install
