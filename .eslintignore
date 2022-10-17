@@ -3,5 +3,6 @@
 /dist
 /package-lock.json
 .DS_Store
-/src/componets
+/src/components
 /src/pages
+/src/App.vue
