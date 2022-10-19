@@ -4,6 +4,7 @@ import MainSite from "@/pages/msite/MainSite"
 import SearchBar from "@/pages/search/SearchBar"
 import UserOrder from "@/pages/order/UserOrder"
 import UserProfile from "@/pages/profile/UserProfile"
+import UserLogin from "@/pages/login/UserLogin"
 
 Vue.use(VueRouter)
 
@@ -21,7 +22,7 @@ export default new VueRouter({
         {
             path:'/msite',
             // component: () => import ('@/pages/msite/MainSite'),
-            component: MainSite,
+            component: MainSite
             // children:[{
             //     path: 'index',
             //     component: () => import ('@/pages/msite/Msite'),
@@ -29,15 +30,19 @@ export default new VueRouter({
         },
         {
             path:'/search',
-            component: SearchBar,
+            component: SearchBar
         },
         {
             path:'/order',
-            component: UserOrder,
+            component: UserOrder
         },
         {
             path:'/profile',
-            component: UserProfile,
+            component: UserProfile
         },
+        {
+            path:'/login',
+            component: UserLogin
+        }
     ]
 })

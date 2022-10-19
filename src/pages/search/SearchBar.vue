@@ -1,10 +1,6 @@
 <template>
   <section class="search">
-    <header class="msite_header">
-      <span class="header_title">
-        <span class="header_title_text ellipsis">搜索</span>
-      </span>
-    </header>
+    <HeaderTop topTitle="搜索"></HeaderTop>
     <form class="search_form">
       <input type="search" placeholder="请输入商家名称" class="search_input">
       <input type="submit" class="search_submit" disabled value="搜索">
@@ -60,37 +56,19 @@
 </template>
 
 <script>
+import HeaderTop from "@/components/HeaderTop"
 export default {
     name: 'SearchBar',
+    components:{HeaderTop}
 }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 @import "../../common/stylus/mixins.styl"
   .search
     width 100%
     height 100%
     overflow hidden
-    .msite_header
-      background-color #02a774
-      position fixed
-      z-index 100
-      left 0
-      top 0
-      width 100%
-      height 45px
-      .header_title
-        position absolute
-        top 50%
-        left 50%
-        transform translate(-50%, -50%)
-        width 50%
-        color #fff
-        text-align center
-        .header_title_text
-          font-size 20px
-          color #fff
-          display block
     .search_form
       clearFix()
       margin-top 45px

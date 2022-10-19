@@ -7,9 +7,16 @@
 
 <script>
 import FooterGuide from "./components/footerguide/FooterGuide"
+import {mapActions} from "vuex"
 export default {
   name: "App",
   components: {FooterGuide},
+  methods:{
+    ...mapActions(["getAddress","getFoodCategorys"])
+  },
+  mounted(){
+    this.getAddress()
+  }
 };
 </script>
 

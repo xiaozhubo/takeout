@@ -1,20 +1,16 @@
 <template>
   <section class="profile">
-    <header class="msite_header">
-      <span class="header_title">
-        <span class="header_title_text ellipsis">我的</span>
-      </span>
-    </header>
+    <HeaderTop topTitle="我的"></HeaderTop>
     <section class="profile-number">
-      <a href="javascript:;" class="profile-link">
+      <router-link to="/login" class="profile-link">
         <div class="profile_image">
           <i class="iconfont icon-my"></i>
         </div>
         <div class="user-info">
-          <p class="user-info-top"></p>
+          <p class="user-info-top">登录/注册</p>
           <p>
             <span class="user-icon">
-              <i class="iconfont icon-shouji icon-mobile"></i>
+              <i class="iconfont icon-shouji"></i>
             </span>
             <span class="icon-mobile-number">暂未绑定手机号</span>
           </p>
@@ -22,7 +18,7 @@
         <span class="arrow">
           <i class="iconfont icon-jiantou2"></i>
         </span>
-      </a>
+      </router-link>
     </section>
     <section class="profile_info_data border-1px">
       <ul class="info_data_list">
@@ -101,36 +97,18 @@
 </template>
 
 <script>
+import HeaderTop from "@/components/HeaderTop"
 export default {
   name: "UserProfile",
+  components:{HeaderTop}
 };
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 @import "../../common/stylus/mixins.styl"
   .profile //我的
     width 100%
     overflow hidden
-    .msite_header
-      background-color #02a774
-      position fixed
-      z-index 100
-      left 0
-      top 0
-      width 100%
-      height 45px
-      .header_title
-        position absolute
-        top 50%
-        left 50%
-        transform translate(-50%, -50%)
-        width 50%
-        color #fff
-        text-align center
-        .header_title_text
-          font-size 20px
-          color #fff
-          display block
     .profile-number
       margin-top 45.5px
       .profile-link
@@ -149,6 +127,7 @@ export default {
           .icon-my
             background #e4e4e4
             font-size 62px
+            color: gray
         .user-info
           float left
           margin-top 8px
@@ -165,8 +144,8 @@ export default {
               margin-right 5px
               width 20px
               height 20px
-              .icon-mobile
-                font-size 30px
+              .icon-shouji
+                font-size 24px
                 vertical-align text-top
             .icon-mobile-number
               font-size 14px
