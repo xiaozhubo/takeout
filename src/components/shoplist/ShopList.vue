@@ -1,237 +1,68 @@
 <template>
   <div class="shop_container">
-    <ul class="shop_list">
-        <li class="shop_li border-1px">
-        <a href="javascript:;">
+    <ul class="shop_list" v-if="shops.length != 0">
+        <li class="shop_li border-1px" v-for="(shop,index) in shops" :key="index">
+          <a href="javascript:;">
             <div class="shop_left">
-            <img src="/images/shop/1.jpg" alt="" class="shop_img">
+            <!-- <img :src="shopImageBaseUrl + shop.image_path" alt="" class="shop_img"> -->
+              <img src="/images/shop/1.jpg" alt="" class="shop_img">
             </div>
             <div class="shop_right">
-            <section class="shop_detail_header">
-                <h4 class="shop_title ellipsis">渣渣辉：是兄弟就来砍我！</h4>
+              <section class="shop_detail_header">
+                <h4 class="shop_title ellipsis">{{shop.name}}</h4>
                 <ul class="shop_detail_ul">
-                <li class="supports">
-                    兄弟
-                </li>
-                <li class="supports">
-                    砍我
-                </li>
+                  <li class="supports" v-for="(support,index) in shop.supports" :key="index">{{support.icon_name}}</li>
                 </ul>
-            </section>
-            <section class="shop_rating_order">
+              </section>
+              <section class="shop_rating_order">
                 <section class="shop_rating_order_left">
-                <div class="star star-24">
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item half"></span>
-                </div>
-                <div class="rating_section">
-                    4.7
-                </div>
-                <div class="order_section">
-                    月售？？单
-                </div>
+                  <StarRating :score="shop.rating" :size="24"></StarRating>
+                  <div class="rating_section">
+                      {{shop.rating}}
+                  </div>
+                  <div class="order_section">
+                      月售{{shop.recent_order_num}}单
+                  </div>
                 </section>
                 <section class="shop_rating_order_right">
-                <span class="delivery_style delivery_right">香</span>
-                <span class="delivery_style delivery_right">好吃</span>
+                  <span class="delivery_style delivery_right">{{shop.delivery_mode.text}}</span>
                 </section>
-            </section>
-            <section class="shop_distance">
-                <p class="shop_delivery_msg">
-                <span>¥？？？起送</span>
-                <span class="segmentation">/</span>
-                <span>配送费约¥???</span>
-                </p>
-            </section>
+              </section>
+              <section class="shop_distance">
+                  <p class="shop_delivery_msg">
+                    <span>¥{{shop.float_minimum_order_amount}}起送</span>
+                    <span class="segmentation">/</span>
+                    <span>配送费约¥{{shop.float_delivery_fee}}</span>
+                  </p>
+                  <p class="shop_delivery_msg" style="float: right;">
+                    距离{{shop.distance}}
+                  </p>
+              </section>
             </div>
-        </a>
+          </a>
         </li>
-        <li class="shop_li border-1px">
-        <a href="javascript:;">
-            <div class="shop_left">
-            <img src="/images/shop/2.jpg" alt="" class="shop_img">
-            </div>
-            <div class="shop_right">
-            <section class="shop_detail_header">
-                <h4 class="shop_title ellipsis">商品名称</h4>
-                <ul class="shop_detail_ul">
-                <li class="supports">
-                    商品
-                </li>
-                </ul>
-            </section>
-            <section class="shop_rating_order">
-                <section class="shop_rating_order_left">
-                <div class="star star-24">
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                </div>
-                <div class="rating_section">
-                    4.7
-                </div>
-                <div class="order_section">
-                    月售？？单
-                </div>
-                </section>
-                <section class="shop_rating_order_right">
-                <span class="delivery_style delivery_right">又香又好吃</span>
-                </section>
-            </section>
-            <section class="shop_distance">
-                <p class="shop_delivery_msg">
-                <span>¥？？？起送</span>
-                <span class="segmentation">/</span>
-                <span>配送费约¥???</span>
-                </p>
-            </section>
-            </div>
-        </a>
-        </li>
-        <li class="shop_li border-1px">
-        <a href="javascript:;">
-            <div class="shop_left">
-            <img src="/images/shop/3.jpg" alt="" class="shop_img">
-            </div>
-            <div class="shop_right">
-            <section class="shop_detail_header">
-                <h4 class="shop_title ellipsis">商品名称</h4>
-                <ul class="shop_detail_ul">
-                <li class="supports">
-                    商品
-                </li>
-                </ul>
-            </section>
-            <section class="shop_rating_order">
-                <section class="shop_rating_order_left">
-                <div class="star star-24">
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                </div>
-                <div class="rating_section">
-                    4.7
-                </div>
-                <div class="order_section">
-                    月售？？单
-                </div>
-                </section>
-                <section class="shop_rating_order_right">
-                <span class="delivery_style delivery_right">又香又好吃</span>
-                </section>
-            </section>
-            <section class="shop_distance">
-                <p class="shop_delivery_msg">
-                <span>¥？？？起送</span>
-                <span class="segmentation">/</span>
-                <span>配送费约¥???</span>
-                </p>
-            </section>
-            </div>
-        </a>
-        </li>
-        <li class="shop_li border-1px">
-        <a href="javascript:;">
-            <div class="shop_left">
-            <img src="/images/shop/4.jpg" alt="" class="shop_img">
-            </div>
-            <div class="shop_right">
-            <section class="shop_detail_header">
-                <h4 class="shop_title ellipsis">商品名称</h4>
-                <ul class="shop_detail_ul">
-                <li class="supports">
-                    商品
-                </li>
-                </ul>
-            </section>
-            <section class="shop_rating_order">
-                <section class="shop_rating_order_left">
-                <div class="star star-24">
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                </div>
-                <div class="rating_section">
-                    4.7
-                </div>
-                <div class="order_section">
-                    月售？？单
-                </div>
-                </section>
-                <section class="shop_rating_order_right">
-                <span class="delivery_style delivery_right">又香又好吃</span>
-                </section>
-            </section>
-            <section class="shop_distance">
-                <p class="shop_delivery_msg">
-                <span>¥？？？起送</span>
-                <span class="segmentation">/</span>
-                <span>配送费约¥???</span>
-                </p>
-            </section>
-            </div>
-        </a>
-        </li>
-        <li class="shop_li border-1px">
-        <a href="javascript:;">
-            <div class="shop_left">
-            <img src="/images/shop/1.jpg" alt="" class="shop_img">
-            </div>
-            <div class="shop_right">
-            <section class="shop_detail_header">
-                <h4 class="shop_title ellipsis">商品名称</h4>
-                <ul class="shop_detail_ul">
-                <li class="supports">
-                    商品
-                </li>
-                </ul>
-            </section>
-            <section class="shop_rating_order">
-                <section class="shop_rating_order_left">
-                <div class="star star-24">
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                    <span class="star-item on"></span>
-                </div>
-                <div class="rating_section">
-                    4.7
-                </div>
-                <div class="order_section">
-                    月售？？单
-                </div>
-                </section>
-                <section class="shop_rating_order_right">
-                <span class="delivery_style delivery_right">又香又好吃</span>
-                </section>
-            </section>
-            <section class="shop_distance">
-                <p class="shop_delivery_msg">
-                <span>¥？？？起送</span>
-                <span class="segmentation">/</span>
-                <span>配送费约¥???</span>
-                </p>
-            </section>
-            </div>
-        </a>
-        </li>
+    </ul>
+    <ul class="shop_list" v-else>
+      <img src="/images/shop_back.svg" alt="" v-for="item in 6" :key="item">
     </ul>
   </div>
 </template>
 
 <script>
+import {mapState} from "vuex"
+import StarRating from "../star/StarRating"
 export default {
-
+  data(){
+    return {
+      shopImageBaseUrl: 'http://cangdu.org:8001/img/'
+    }  
+  },
+  components:{
+    StarRating
+  },
+  computed:{
+    ...mapState(["shops"])
+  }
 }
 </script>
 
@@ -301,54 +132,6 @@ export default {
           .shop_rating_order_left
             float left
             color #ff9a0d
-            .star //2x图 3x图
-              float right
-              font-size 0
-              .star-item
-                display inline-block
-                background-repeat no-repeat
-              &.star-48
-                .star-item
-                  width 20px
-                  height 20px
-                  margin-right 22px
-                  background-size 20px 20px
-                  &:last-child
-                    margin-right: 0
-                  &.on
-                    bg-image('../../assets/images/stars/star48_on')
-                  &.half
-                    bg-image('../../assets/images/stars/star48_half')
-                  &.off
-                    bg-image('../../assets/images/stars/star48_off')
-              &.star-36
-                .star-item
-                  width 15px
-                  height 15px
-                  margin-right 6px
-                  background-size 15px 15px
-                  &:last-child
-                    margin-right 0
-                  &.on
-                    bg-image('../../assets/images/stars/star36_on')
-                  &.half
-                    bg-image('../../assets/images/stars/star36_half')
-                  &.off
-                    bg-image('../../assets/images/stars/star36_off')
-              &.star-24
-                .star-item
-                  width 10px
-                  height 10px
-                  margin-right 3px
-                  background-size 10px 10px
-                  &:last-child
-                    margin-right 0
-                  &.on
-                    bg-image('../../assets/images/stars/star24_on')
-                  &.half
-                    bg-image('../../assets/images/stars/star24_half')
-                  &.off
-                    bg-image('../../assets/images/stars/star24_off')
             .rating_section
               float left
               font-size 10px

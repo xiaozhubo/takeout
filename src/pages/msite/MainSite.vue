@@ -13,62 +13,36 @@
     <div class="miste-content-wrapper">
       <div class="miste-content">
         <nav class="msite_nav">
-          <div class="swiper-container">
+          <div class="swiper-container" v-if="categorys.length != 0">
             <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <a href="javascript:;" class="link_to_food">
+              <div
+                class="swiper-slide"
+                v-for="(categorys, index) in categorySplitArr"
+                :key="index"
+              >
+                <a
+                  href="javascript:;"
+                  class="link_to_food"
+                  v-for="(category, index) in categorys"
+                  :key="index"
+                >
                   <div class="food_container">
-                    <img src="/images/nav/8.jpg" alt="Network Error!" />
+                    <img
+                      :src="categoryImageBaseUrl + category.image_url"
+                      alt="Network Error!"
+                    />
                   </div>
-                  <span>小吃</span>
-                </a>
-                <a href="javascript:;" class="link_to_food">
-                  <div class="food_container">
-                    <img src="/images/nav/7.jpg" alt="Network Error!" />
-                  </div>
-                  <span>美食</span>
-                </a>
-                <a href="javascript:;" class="link_to_food">
-                  <div class="food_container">
-                    <img src="/images/nav/6.jpg" alt="Network Error!" />
-                  </div>
-                  <span>药品</span>
-                </a>
-                <a href="javascript:;" class="link_to_food">
-                  <div class="food_container">
-                    <img src="/images/nav/5.jpg" alt="Network Error!" />
-                  </div>
-                  <span>超市</span>
-                </a>
-                <a href="javascript:;" class="link_to_food">
-                  <div class="food_container">
-                    <img src="/images/nav/4.jpg" alt="Network Error!" />
-                  </div>
-                  <span>速食</span>
-                </a>
-                <a href="javascript:;" class="link_to_food">
-                  <div class="food_container">
-                    <img src="/images/nav/3.jpg" alt="Network Error!" />
-                  </div>
-                  <span>甜点</span>
-                </a>
-                <a href="javascript:;" class="link_to_food">
-                  <div class="food_container">
-                    <img src="/images/nav/2.jpg" alt="Network Error!" />
-                  </div>
-                  <span>咖啡</span>
-                </a>
-                <a href="javascript:;" class="link_to_food">
-                  <div class="food_container">
-                    <img src="/images/nav/1.jpg" alt="Network Error!" />
-                  </div>
-                  <span>汉堡</span>
+                  <span>{{ category.title }}</span>
                 </a>
               </div>
             </div>
             <div class="swiper-pagination"></div>
           </div>
-          <img src="/images/msite_back.svg" style="display:none;" alt="Network Error!">
+          <img
+            src="/images/msite_back.svg"
+            alt="Network Error!"
+            v-else
+          />
         </nav>
         <div class="msite_shop_list">
           <div class="shop_header">
@@ -83,92 +57,158 @@
 </template>
 
 <script>
-import Swiper from "swiper"
-import "swiper/dist/css/swiper.min.css"
-import {mapState} from "vuex"
-import HeaderTop from "@/components/HeaderTop"
-import ShopList from "@/components/shoplist/ShopList"
+import Swiper from "swiper";
+import "swiper/dist/css/swiper.min.css";
+import { mapState } from "vuex";
+import HeaderTop from "@/components/HeaderTop";
+import ShopList from "@/components/shoplist/ShopList";
 export default {
   name: "MainSite",
-  components:{HeaderTop, ShopList},
-  mounted(){
-    new Swiper('.swiper-container', {
-      loop: true,
-      pagination: '.swiper-pagination'
-    })
+  data() {
+    return {
+      categoryImageBaseUrl: "https://fuss10.elemecdn.com",
+    };
   },
-  computed:{
-    ...mapState(["address"]),
-    addressName(){
-        return this.address.name === "" || this.address.name === undefined ? "定位中..." : this.address.name
-    }
-  }
+  components: { HeaderTop, ShopList },
+  mounted() {
+    this.$store.dispatch("getFoodCategorys");
+    this.$store.dispatch("getShopListByGeo");
+  },
+  computed: {
+    ...mapState(["address", "categorys"]),
+    addressName() {
+      return this.address.name === "" || this.address.name === undefined
+        ? "定位中..."
+        : this.address.name;
+    },
+    categorySplitArr() {
+      const { categorys } = this;
+      const categoryArr = [];
+      let minArr = [];
+      for (let i = 0; i < categorys.length; i++) {
+        if (minArr.length === 8) {
+          minArr = [];
+        }
+        if (minArr.length === 0) {
+          categoryArr.push(minArr);
+        }
+        minArr.push(categorys[i]);
+      }
+      return categoryArr;
+    },
+  },
+  watch: {
+    categorys() {
+      this.$nextTick(() => {
+        new Swiper(".swiper-container", {
+          loop: true,
+          pagination: ".swiper-pagination",
+        })
+      })
+    },
+  },
 };
 </script>
 
 <style lang="stylus" scoped>
-@import "../../common/stylus/mixins.styl"
-.msite  //首页
-    width 100%
-    .miste-content-wrapper
-      position fixed
-      top: 45px
-      bottom: 46px
-      width: 100%
-      overflow: auto
-      &::-webkit-scrollbar
-        display: none
-      .msite_nav
-        bottom-border-1px(#e4e4e4)
-        margin-top 15px
-        height 200px
-        background #fff
-        .swiper-container
-          width 100%
-          height 100%
-          .swiper-wrapper
-            width 100%
-            height 100%
-            .swiper-slide
-              display flex
-              justify-content center
-              align-items flex-start
-              flex-wrap wrap
-              .link_to_food
-                width 25%
-                .food_container
-                  display block
-                  width 100%
-                  text-align center
-                  padding-bottom 10px
-                  font-size 0
-                  img
-                    display inline-block
-                    width 50px
-                    height 50px
-                span
-                  display block
-                  width 100%
-                  text-align center
-                  font-size 13px
-                  color #666
-          .swiper-pagination
-            >span.swiper-pagination-bullet-active
-              background #02a774
-    .msite_shop_list
-      top-border-1px(#e4e4e4)
-      &::before
-        height 10px
-        transform translateY(-10px)
-      margin-top 10px
-      background #fff
-      .shop_header
-        padding 10px 10px 0
-        .shop_icon
-          margin-left 5px
-          color #999
-        .shop_header_title
-          color #999
-          font-size 14px
-          line-height 20px
+@import '../../common/stylus/mixins.styl';
+
+.msite { // 首页
+  width: 100%;
+
+  .miste-content-wrapper {
+    position: fixed;
+    top: 45px;
+    bottom: 46px;
+    width: 100%;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .msite_nav {
+      bottom-border-1px(#e4e4e4);
+      margin-top: 15px;
+      height: 200px;
+      background: #fff;
+
+      .swiper-container {
+        width: 100%;
+        height: 100%;
+
+        .swiper-wrapper {
+          width: 100%;
+          height: 100%;
+
+          .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+
+            .link_to_food {
+              width: 25%;
+
+              .food_container {
+                display: block;
+                width: 100%;
+                text-align: center;
+                padding-bottom: 10px;
+                font-size: 0;
+
+                img {
+                  display: inline-block;
+                  width: 50px;
+                  height: 50px;
+                }
+              }
+
+              span {
+                display: block;
+                width: 100%;
+                text-align: center;
+                font-size: 13px;
+                color: #666;
+              }
+            }
+          }
+        }
+
+        .swiper-pagination {
+          >span.swiper-pagination-bullet-active {
+            background: #02a774;
+          }
+        }
+      }
+    }
+  }
+
+  .msite_shop_list {
+    top-border-1px(#e4e4e4);
+
+    &::before {
+      height: 10px;
+      transform: translateY(-10px);
+    }
+
+    margin-top: 10px;
+    background: #fff;
+
+    .shop_header {
+      padding: 10px 10px 0;
+
+      .shop_icon {
+        margin-left: 5px;
+        color: #999;
+      }
+
+      .shop_header_title {
+        color: #999;
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
+  }
+}
 </style>
