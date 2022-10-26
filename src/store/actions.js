@@ -1,6 +1,9 @@
-import { reqAddress, reqFoodCategorys, reqShopListByGeo } from "@/api"
-import { RECEIVE_ADDRESS, RECEIVE_CATEGORYS, RECEIVE_SHOPS } from "./mutation-type"
+import { reqAddress, reqFoodCategorys, reqShopListByGeo, reqUserInfo,reqLogout } from "@/api"
+import { RECEIVE_ADDRESS, RECEIVE_CATEGORYS, RECEIVE_SHOPS, RECEIVE_USERINFO,RECORD_GEOHASH,RESET_USERINFO } from "./mutation-type"
 export default {
+  recordGeohash({commit},geo){
+    commit(RECORD_GEOHASH,{geo})
+  },
   getAddress({ commit, state }) {
     const geohash = state.latitude + "," + state.longitude
     reqAddress(geohash)
@@ -28,5 +31,23 @@ export default {
       const shops = result.data
       commit(RECEIVE_SHOPS, { shops })
     }
+  },
+  // 记录用户信息
+  recordUserInfo({commit},userinfo){
+    commit(RECEIVE_USERINFO,{userinfo})
+  },
+  // 根据会话异步获取用户信息
+  async getUserInfo({commit}){
+    const result = await reqUserInfo()
+    if(result.code === 0){
+      const userinfo = result.data
+      commit(RECEIVE_USERINFO,{userinfo})
+    }
+  },
+ async logout({commit}){
+  const result = await reqLogout()
+  if(result.code === 0){
+    commit(RESET_USERINFO)
   }
+ }
 }

@@ -4,25 +4,31 @@
       <div class="login_header">
         <h2 class="login_logo">硅谷外卖</h2>
         <div class="login_header_title">
-          <a href="javascript:;" class="on">短信登录</a>
-          <a href="javascript:;">密码登录</a>
+          <a href="javascript:;" :class="{on: loginWay}" @click="loginWay = true">短信登录</a>
+          <a href="javascript:;" :class="{on: !loginWay}" @click="loginWay = false">密码登录</a>
         </div>
       </div>
       <div class="login_content">
         <form>
-          <div class="on">
+          <div :class="{on: loginWay}">
             <section class="login_message">
-              <input type="tel" maxlength="11" placeholder="手机号" />
-              <button disabled="disabled" class="get_verification">
-                获取验证码
+              <input type="tel" maxlength="11" placeholder="手机号" v-model="phone" />
+              <button 
+              :disabled="!showVerify" 
+              class="get_verification" 
+              :class="{showVerify:showVerify}" 
+              @click.prevent="getCodeByPhone" 
+              v-text="computeTime > 0 ? '已发送' + computeTime + 's' : '获取验证码'"
+              >
+                <!-- {{computeTime > 0 ? "已发送" + computeTime + "s" : "获取验证码"}} -->
               </button>
             </section>
             <section class="login_verification">
-              <input type="tel" maxlength="8" placeholder="验证码" />
+              <input type="text" maxlength="6" placeholder="验证码" v-model="code" />
             </section>
             <section class="login_hint">
               <div class="user_protocol">
-                <input type="checkbox" id="agree" value="agree">
+                <input type="checkbox" id="agree" value="agree" v-model="agree">
                 <label for="agree">同意</label>
                 <a href="javascript:;">《用户服务协议》</a>
               </div>
@@ -31,33 +37,37 @@
               </div>
             </section>
           </div>
-          <div>
+          <div :class="{on: !loginWay}">
             <section>
               <section class="login_message">
                 <input
-                  type="tel"
-                  maxlength="11"
+                  type="text"
+                  maxlength="32"
                   placeholder="手机/邮箱/用户名"
+                  v-model="name"
                 />
               </section>
               <section class="login_verification">
-                <input type="tel" maxlength="8" placeholder="密码" />
-                <div class="switch_button off">
+                <input v-if="showPwd" type="text" maxlength="16" placeholder="密码" v-model="pwd" />
+                <input v-else type="password" maxlength="16" placeholder="密码" v-model="pwd" />
+                <div class="switch_button" :class="showPwd ? 'on' : 'off'" @click="showPwd=!showPwd">
                   <div class="switch_circle"></div>
-                  <span class="switch_text">...</span>
+                  <span class="switch_text">{{showPwd ? 'abc' : ''}}</span>
                 </div>
               </section>
               <section class="login_message">
-                <input type="text" maxlength="11" placeholder="验证码" />
+                <input type="text" maxlength="6" placeholder="验证码" v-model="captcha" />
                 <img
+                  ref="captcha"
                   class="get_verification"
-                  src="/images/captcha.svg"
+                  src="http://localhost:4000/captcha"
                   alt="captcha"
+                  @click="getCaptcha"
                 />
               </section>
             </section>
           </div>
-          <button class="login_submit">登录</button>
+          <button class="login_submit" @click.prevent="login">登录</button>
         </form>
         <a href="javascript:;" class="about_us">关于我们</a>
       </div>
@@ -65,12 +75,118 @@
         <i class="iconfont icon-jiantou1"></i>
       </a>
     </div>
+    <TipAlert v-show="showAlertTip" :alertText="alertText" @closeTip="closeTip"></TipAlert>
   </section>
 </template>
 
 <script>
+import {reqLoginByPwd} from "@/api"
+import TipAlert from "@/components/TipAlert.vue"
 export default {
   name: "UserLogin",
+  data(){
+    return{
+      loginWay: true,//登录方式
+      computeTime: 0,
+      agree: false,
+      showPwd: false,
+      phone: "",
+      code: "",
+      name: "",
+      pwd: "",
+      captcha: "",
+      alertText: "",
+      showAlertTip: false,
+      getCodeVerifyFlag: false,//是否获取手机验证码
+      phoneFlag: "",
+    }
+  },
+  components:{
+    TipAlert
+  },
+  methods:{
+    getCodeByPhone(){
+      if(!this.computeTime){
+        this.phoneFlag = this.phone
+        this.computeTime = 10
+        this.getCodeVerifyFlag = true
+        this.conutDownInterval = setInterval(()=>{
+          this.computeTime --
+          if(this.computeTime <= 0){
+            clearInterval(this.conutDownInterval)
+          }
+        },1000)
+      }
+    },
+    closeTip(){
+      this.showAlertTip = false
+      this.alertText = ""
+    },
+    showAlert(text){
+      this.alertText = text
+      this.showAlertTip = true
+    },
+    async login(){
+      let result
+      if(this.loginWay){
+        const {showVerify,phone,code,agree} = this
+        if(!showVerify){
+          this.showAlert("手机号码不正确！")
+        }else if(!this.getCodeVerifyFlag){
+          this.showAlert("请先获取验证码！")
+        }else if(!/\d{6}/.test(code)){
+          this.showAlert("验证码不正确！")
+        }else if(!agree){
+          this.showAlert("请阅读并同意《用户服务协议》")
+        }else{
+          phone
+        }
+      }else{
+        const {name,pwd,captcha} = this
+        if(!name){
+          this.showAlert("账号不能为空！")
+        }else if(!pwd){
+          this.showAlert("密码不能为空！")
+        }else if(!captcha){
+          this.showAlert("验证码不正确！")
+        }else{
+          result = await reqLoginByPwd({name,pwd,captcha})
+        }
+      }
+      if(result){
+        if(this.computeTime){
+          this.computeTime = 0
+          this.getCodeVerifyFlag = false
+          clearInterval(this.conutDownInterval)
+        }
+        if(result.code === 0){
+          const userinfo = result.data
+          this.$store.dispatch("recordUserInfo",userinfo)
+          this.$router.replace("/profile")
+        }else{
+          this.getCaptcha()
+          this.showAlert(result.msg)
+        }
+      }
+    },
+    getCaptcha(){
+      this.$refs.captcha.src = "http://localhost:4000/captcha?time=" + Date.now()
+    }
+  },
+  computed:{
+    showVerify(){
+      return /^1\d{10}/.test(this.phone)
+    }
+  },
+  watch:{
+    phone(){
+      if(this.getCodeVerifyFlag){
+        this.getCodeVerifyFlag = false  //获取验证码之后手机号码被修改
+      }else if(this.showVerify && this.phone !== this.phoneFlag){//修改后的手机号码与上一次获取验证码时不同
+        this.computeTime = 0
+      }
+    }
+  }
 };
 </script>
 
@@ -134,6 +250,8 @@ export default {
               color #ccc
               font-size 14px
               background transparent
+              &.showVerify
+                color: black
           .login_verification
             position relative
             margin-top 16px
@@ -161,8 +279,9 @@ export default {
                   color #ddd
               &.on
                 background #02a774
+                .switch_circle
+                  transform translateX(27px)
               >.switch_circle
-                //transform translateX(27px)
                 position absolute
                 top -1px
                 left -1px

@@ -5,6 +5,7 @@ import SearchBar from "@/pages/search/SearchBar"
 import UserOrder from "@/pages/order/UserOrder"
 import UserProfile from "@/pages/profile/UserProfile"
 import UserLogin from "@/pages/login/UserLogin"
+import ShopIndex from "@/pages/shop/ShopIndex"
 
 Vue.use(VueRouter)
 
@@ -22,7 +23,10 @@ export default new VueRouter({
         {
             path:'/msite',
             // component: () => import ('@/pages/msite/MainSite'),
-            component: MainSite
+            component: MainSite,
+            meta:{
+                showFooter: true
+            }
             // children:[{
             //     path: 'index',
             //     component: () => import ('@/pages/msite/Msite'),
@@ -30,19 +34,32 @@ export default new VueRouter({
         },
         {
             path:'/search',
-            component: SearchBar
+            component: SearchBar,
+            meta:{
+                showFooter: true
+            }
         },
         {
             path:'/order',
-            component: UserOrder
+            component: UserOrder,
+            meta:{
+                showFooter: true
+            }
         },
         {
             path:'/profile',
-            component: UserProfile
+            component: UserProfile,
+            meta:{
+                showFooter: true
+            }
         },
         {
             path:'/login',
             component: UserLogin
+        },
+        {
+            path:'/shopindex',
+            component: ShopIndex
         }
     ]
 })

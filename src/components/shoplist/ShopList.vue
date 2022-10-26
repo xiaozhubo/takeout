@@ -2,7 +2,7 @@
   <div class="shop_container">
     <ul class="shop_list" v-if="shops.length != 0">
         <li class="shop_li border-1px" v-for="(shop,index) in shops" :key="index">
-          <a href="javascript:;">
+          <a href="javascript:;" @click="$router.push('/shopindex')">
             <div class="shop_left">
             <!-- <img :src="shopImageBaseUrl + shop.image_path" alt="" class="shop_img"> -->
               <img src="/images/shop/1.jpg" alt="" class="shop_img">

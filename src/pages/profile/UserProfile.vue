@@ -2,17 +2,26 @@
   <section class="profile">
     <HeaderTop topTitle="我的"></HeaderTop>
     <section class="profile-number">
-      <router-link to="/login" class="profile-link">
+      <router-link :to="userinfo._id ? '/userinfo' : '/login'" class="profile-link">
         <div class="profile_image">
           <i class="iconfont icon-my"></i>
         </div>
-        <div class="user-info">
+        <div class="user-info" v-if="!userinfo._id">
           <p class="user-info-top">登录/注册</p>
           <p>
             <span class="user-icon">
               <i class="iconfont icon-shouji"></i>
             </span>
             <span class="icon-mobile-number">暂未绑定手机号</span>
+          </p>
+        </div>
+        <div class="user-info" v-else>
+          <p class="user-info-top">{{userinfo.name ? userinfo.name : "请设置用户名"}}</p>
+          <p>
+            <span class="user-icon">
+              <i class="iconfont icon-shouji"></i>
+            </span>
+            <span class="icon-mobile-number">{{userinfo.phone ? userinfo.phone : "暂未绑定手机号"}}</span>
           </p>
         </div>
         <span class="arrow">
@@ -89,18 +98,37 @@
       </a>
     </section>
 
-    <section class="profile_my_order border-1px">
-      <!-- <mt-button type="danger" style="width: 100%">退出登陆</mt-button> -->
-      <button type="button" class="profile_my_order_logout">退出登陆</button>
+    <section class="profile_my_order border-1px" v-if="userinfo._id">
+      <mt-button type="danger" style="width: 100%" @click="logout">退出登陆</mt-button>
+      <!-- <button type="button" class="profile_my_order_logout" v-if="userinfo._id">退出登陆</button> -->
     </section>
   </section>
 </template>
 
 <script>
+import {MessageBox,Toast } from "mint-ui"
+import { mapState } from 'vuex'
 import HeaderTop from "@/components/HeaderTop"
 export default {
   name: "UserProfile",
-  components:{HeaderTop}
+  components:{HeaderTop},
+  computed:{
+    ...mapState(['userinfo'])
+  },
+  methods:{
+    logout(){
+      MessageBox.confirm("确认退出吗？").then(
+        ()=>{
+          this.$store.dispatch("logout")
+          Toast({
+            message: '退出成功',
+            iconClass: 'iconfont icon-check-circle1'
+          })
+        },
+        ()=>{}
+      )
+    }
+  }
 };
 </script>
 
@@ -148,7 +176,7 @@ export default {
                 font-size 24px
                 vertical-align text-top
             .icon-mobile-number
-              font-size 14px
+              font-size 16px
               color #fff
         .arrow
           width 12px
